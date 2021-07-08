@@ -169,6 +169,15 @@ static void gap_params_init(void)
 
     err_code = sd_ble_gap_ppcp_set(&gap_conn_params);
     APP_ERROR_CHECK(err_code);
+																					
+		//ADDR SETTING.																			
+		ble_gap_addr_t addr;
+		memset(&addr, 0, sizeof(addr));
+		uint8_t addr_ini[6] = {0x66, 0x55, 0x44, 0x33, 0x22, 0x22};
+		memcpy(addr.addr, addr_ini, sizeof(uint8_t)*6);
+		err_code = sd_ble_gap_addr_set(&addr);
+		APP_ERROR_CHECK(err_code);																					
+																						
 }
 
 

@@ -221,12 +221,18 @@ static uint32_t cccd_configure(ble_nus_c_t * p_ble_nus_c, bool notification_enab
     cccd_req.type                        = NRF_BLE_GQ_REQ_GATTC_WRITE;
     cccd_req.error_handler.cb            = gatt_error_handler;
     cccd_req.error_handler.p_ctx         = p_ble_nus_c;
-    cccd_req.params.gattc_write.handle   = p_ble_nus_c->handles.nus_tx_cccd_handle;
+		cccd_req.params.gattc_write.handle   = p_ble_nus_c->handles.nus_tx_cccd_handle;
     cccd_req.params.gattc_write.len      = BLE_CCCD_VALUE_LEN;
     cccd_req.params.gattc_write.offset   = 0;
     cccd_req.params.gattc_write.p_value  = cccd;
     cccd_req.params.gattc_write.write_op = BLE_GATT_OP_WRITE_REQ;
     cccd_req.params.gattc_write.flags    = BLE_GATT_EXEC_WRITE_FLAG_PREPARED_WRITE;
+		
+		//issue about s->c communication.
+		if(p_ble_nus_c->handles.nus_tx_cccd_handle == NULL)
+		{
+				cccd_req.params.gattc_write.handle   = p_ble_nus_c->handles.nus_tx_handle;
+		}
 
     return nrf_ble_gq_item_add(p_ble_nus_c->p_gatt_queue, &cccd_req, p_ble_nus_c->conn_handle);
 }
@@ -237,7 +243,7 @@ uint32_t ble_nus_c_tx_notif_enable(ble_nus_c_t * p_ble_nus_c)
     VERIFY_PARAM_NOT_NULL(p_ble_nus_c);
 
     if ( (p_ble_nus_c->conn_handle == BLE_CONN_HANDLE_INVALID)
-       ||(p_ble_nus_c->handles.nus_tx_cccd_handle == BLE_GATT_HANDLE_INVALID)
+       ||(p_ble_nus_c->handles.nus_tx_handle == BLE_GATT_HANDLE_INVALID)
        )
     {
         return NRF_ERROR_INVALID_STATE;

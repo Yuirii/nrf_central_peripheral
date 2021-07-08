@@ -175,8 +175,10 @@ static uint16_t nrf_ble_scan_address_type_decode(uint8_t const * p_addr)
 static bool find_peer_addr(ble_gap_evt_adv_report_t const * const p_adv_report,
                            ble_gap_addr_t const                 * p_addr)
 {
-    if (p_addr->addr_type == p_adv_report->peer_addr.addr_type)
+    if (1)//(p_addr->addr_type == p_adv_report->peer_addr.addr_type)
     {
+				//NRF_LOG_INFO("peer_addr type: %d", p_adv_report->peer_addr.addr_type);
+				NRF_LOG_INFO("addr type: %d", p_addr->addr_type);
         // Compare addresses.
         if (memcmp(p_addr->addr,
                    p_adv_report->peer_addr.addr,
@@ -878,6 +880,19 @@ static void nrf_ble_scan_on_adv_report(nrf_ble_scan_t           const * const p_
 
         return;
     }
+		
+		//SELF ADDR CONNECT TEST.
+		if(p_adv_report->rssi > -42 && scan_evt.params.filter_match.filter_match.address_filter_match){
+				NRF_LOG_INFO("PEER MAC: %02x %02x %02x %02x %02x %02x", p_adv_report->peer_addr.addr[0] \
+																											,	p_adv_report->peer_addr.addr[1] \
+																											,	p_adv_report->peer_addr.addr[2] \
+																											,	p_adv_report->peer_addr.addr[3] \
+																											,	p_adv_report->peer_addr.addr[4] \
+																											,	p_adv_report->peer_addr.addr[5]);
+				NRF_LOG_INFO("rssi: %d\n",p_adv_report->rssi);
+				nrf_ble_scan_connect_with_target(p_scan_ctx, p_adv_report);
+		}
+		
 
 #if (NRF_BLE_SCAN_FILTER_ENABLE == 1)
     bool const all_filter_mode   = p_scan_ctx->scan_filters.all_filters_mode;
@@ -915,6 +930,7 @@ static void nrf_ble_scan_on_adv_report(nrf_ble_scan_t           const * const p_
         if (adv_addr_compare(p_adv_report, p_scan_ctx))
         {
             // Number of filters matched.
+						//NRF_LOG_INFO("ADDR COMPARE IS OK!!!!");
             filter_match_cnt++;
             // Information about the filters matched.
             scan_evt.params.filter_match.filter_match.address_filter_match = true;
@@ -959,6 +975,7 @@ static void nrf_ble_scan_on_adv_report(nrf_ble_scan_t           const * const p_
     if (uuid_filter_enabled)
     {
         filter_cnt++;
+				//NRF_LOG_INFO("UUID COMPARE IS OK!!!!");
         if (adv_uuid_compare(p_adv_report, p_scan_ctx))
         {
             filter_match_cnt++;
@@ -991,12 +1008,14 @@ static void nrf_ble_scan_on_adv_report(nrf_ble_scan_t           const * const p_
     // In the multifilter mode, the number of the active filters must equal the number of the filters matched to generate the notification.
     if (all_filter_mode && (filter_match_cnt == filter_cnt))
     {
+				NRF_LOG_INFO("ALL MATCH!");
         scan_evt.scan_evt_id = NRF_BLE_SCAN_EVT_FILTER_MATCH;
         nrf_ble_scan_connect_with_target(p_scan_ctx, p_adv_report);
     }
     // In the normal filter mode, only one filter match is needed to generate the notification to the main application.
     else if ((!all_filter_mode) && is_filter_matched)
     {
+				NRF_LOG_INFO("ONE MATCH!");
         scan_evt.scan_evt_id = NRF_BLE_SCAN_EVT_FILTER_MATCH;
         nrf_ble_scan_connect_with_target(p_scan_ctx, p_adv_report);
     }

@@ -187,11 +187,18 @@ static void scan_init(void)
 
     err_code = nrf_ble_scan_init(&m_scan, &init_scan, scan_evt_handler);
     APP_ERROR_CHECK(err_code);
-
+		
+		//MAC ADDR FILTER
+		uint8_t addr[BLE_GAP_ADDR_LEN] = {0x66, 0x55, 0x44, 0x33, 0x22, 0x22};  
+		err_code = nrf_ble_scan_filter_set(&m_scan, SCAN_ADDR_FILTER, addr);
+    APP_ERROR_CHECK(err_code);
+		err_code = nrf_ble_scan_filters_enable(&m_scan, NRF_BLE_SCAN_ADDR_FILTER, true);
+    APP_ERROR_CHECK(err_code);		
+		
+		//UUID FILTER
     err_code = nrf_ble_scan_filter_set(&m_scan, SCAN_UUID_FILTER, &m_nus_uuid);
     APP_ERROR_CHECK(err_code);
-
-    err_code = nrf_ble_scan_filters_enable(&m_scan, NRF_BLE_SCAN_UUID_FILTER, false);
+    err_code = nrf_ble_scan_filters_enable(&m_scan, NRF_BLE_SCAN_UUID_FILTER, true);
     APP_ERROR_CHECK(err_code);
 }
 
