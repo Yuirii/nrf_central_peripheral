@@ -136,39 +136,50 @@ static void scan_start(void)
  */
 static void scan_evt_handler(scan_evt_t const * p_scan_evt)
 {
-    ret_code_t err_code;
+	ret_code_t err_code;
 
     switch(p_scan_evt->scan_evt_id)
     {
-         case NRF_BLE_SCAN_EVT_CONNECTING_ERROR:
-         {
-              err_code = p_scan_evt->params.connecting_err.err_code;
-              APP_ERROR_CHECK(err_code);
-         } break;
+		case NRF_BLE_SCAN_EVT_NOT_FOUND:
+//			NRF_LOG_INFO("NOT_FOUND_PEER");
+//			NRF_LOG_INFO("peer_addr.addr:%02X %02X %02X %02X %02X %02X", 
+//																	p_scan_evt->params.req_report.peer_addr.addr[0],
+//																	p_scan_evt->params.req_report.peer_addr.addr[1],
+//																	p_scan_evt->params.req_report.peer_addr.addr[2],
+//																	p_scan_evt->params.req_report.peer_addr.addr[3],
+//																	p_scan_evt->params.req_report.peer_addr.addr[4],
+//																	p_scan_evt->params.req_report.peer_addr.addr[5]);
+			break;
+		
+		case NRF_BLE_SCAN_EVT_CONNECTING_ERROR:
+		{
+		  err_code = p_scan_evt->params.connecting_err.err_code;
+		  APP_ERROR_CHECK(err_code);
+		} break;
 
-         case NRF_BLE_SCAN_EVT_CONNECTED:
-         {
-              ble_gap_evt_connected_t const * p_connected =
-                               p_scan_evt->params.connected.p_connected;
-             // Scan is automatically stopped by the connection.
-             NRF_LOG_INFO("Connecting to target %02x%02x%02x%02x%02x%02x",
-                      p_connected->peer_addr.addr[0],
-                      p_connected->peer_addr.addr[1],
-                      p_connected->peer_addr.addr[2],
-                      p_connected->peer_addr.addr[3],
-                      p_connected->peer_addr.addr[4],
-                      p_connected->peer_addr.addr[5]
-                      );
-         } break;
+		case NRF_BLE_SCAN_EVT_CONNECTED:
+		{
+		  ble_gap_evt_connected_t const * p_connected =
+						   p_scan_evt->params.connected.p_connected;
+		 // Scan is automatically stopped by the connection.
+		 NRF_LOG_INFO("Connecting to target %02x%02x%02x%02x%02x%02x",
+				  p_connected->peer_addr.addr[0],
+				  p_connected->peer_addr.addr[1],
+				  p_connected->peer_addr.addr[2],
+				  p_connected->peer_addr.addr[3],
+				  p_connected->peer_addr.addr[4],
+				  p_connected->peer_addr.addr[5]
+				  );
+		} break;
 
-         case NRF_BLE_SCAN_EVT_SCAN_TIMEOUT:
-         {
-             NRF_LOG_INFO("Scan timed out.");
-             scan_start();
-         } break;
+		case NRF_BLE_SCAN_EVT_SCAN_TIMEOUT:
+		{
+		 NRF_LOG_INFO("Scan timed out.");
+		 scan_start();
+		} break;
 
-         default:
-             break;
+		default:
+		 break;
     }
 }
 
@@ -394,9 +405,21 @@ static void ble_evt_handler(ble_evt_t const * p_ble_evt, void * p_context)
 {
     ret_code_t            err_code;
     ble_gap_evt_t const * p_gap_evt = &p_ble_evt->evt.gap_evt;
+	ble_gap_evt_adv_report_t const * p_adv_report = &p_ble_evt->evt.gap_evt.params.adv_report;
 
     switch (p_ble_evt->header.evt_id)
     {
+		case BLE_GAP_EVT_ADV_REPORT:
+			NRF_LOG_INFO("peer_addr.addr:%02X %02X %02X %02X %02X %02X", 
+										p_adv_report->peer_addr.addr[0],
+										p_adv_report->peer_addr.addr[1],
+										p_adv_report->peer_addr.addr[2],
+										p_adv_report->peer_addr.addr[3],
+										p_adv_report->peer_addr.addr[4],
+										p_adv_report->peer_addr.addr[5]);
+			
+			
+			break;
         case BLE_GAP_EVT_CONNECTED:
             err_code = ble_nus_c_handles_assign(&m_ble_nus_c, p_ble_evt->evt.gap_evt.conn_handle, NULL);
             APP_ERROR_CHECK(err_code);

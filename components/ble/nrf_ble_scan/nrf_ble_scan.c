@@ -1322,6 +1322,17 @@ void nrf_ble_scan_on_ble_evt(ble_evt_t const * p_ble_evt, void * p_contex)
     {
         case BLE_GAP_EVT_ADV_REPORT:
             nrf_ble_scan_on_adv_report(p_scan_data, p_adv_report);
+						
+			//check peer-peripheral-addr scanned.
+//			NRF_LOG_INFO("peer_addr.addr:%02X %02X %02X %02X %02X %02X", 
+//																	p_adv_report->peer_addr.addr[0],
+//																	p_adv_report->peer_addr.addr[1],
+//																	p_adv_report->peer_addr.addr[2],
+//																	p_adv_report->peer_addr.addr[3],
+//																	p_adv_report->peer_addr.addr[4],
+//																	p_adv_report->peer_addr.addr[5]);
+			
+			
             break;
 
         case BLE_GAP_EVT_TIMEOUT:

@@ -391,6 +391,11 @@
               <FileType>5</FileType>
               <FilePath>..\config\sdk_config.h</FilePath>
             </File>
+            <File>
+              <FileName>app_que.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\app_que.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -3983,6 +3988,11 @@
               <FileName>sdk_config.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\config\sdk_config.h</FilePath>
+            </File>
+            <File>
+              <FileName>app_que.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\app_que.c</FilePath>
             </File>
           </Files>
         </Group>
