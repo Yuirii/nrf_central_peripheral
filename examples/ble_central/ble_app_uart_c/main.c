@@ -57,6 +57,8 @@
 #include "nrf_ble_gatt.h"
 #include "nrf_pwr_mgmt.h"
 #include "nrf_ble_scan.h"
+//specific portion
+#include "app_que.h"
 
 #include "nrf_log.h"
 #include "nrf_log_ctrl.h"
@@ -72,6 +74,9 @@
 #define NUS_SERVICE_UUID_TYPE   BLE_UUID_TYPE_VENDOR_BEGIN              /**< UUID type for the Nordic UART Service (vendor specific). */
 
 #define ECHOBACK_BLE_UART_DATA  1                                       /**< Echo the UART data that is received over the Nordic UART Service (NUS) back to the sender. */
+
+//specific portion
+#define MAC_ECHO				0
 
 
 BLE_NUS_C_DEF(m_ble_nus_c);                                             /**< BLE Nordic UART Service (NUS) client instance. */
@@ -410,6 +415,7 @@ static void ble_evt_handler(ble_evt_t const * p_ble_evt, void * p_context)
     switch (p_ble_evt->header.evt_id)
     {
 		case BLE_GAP_EVT_ADV_REPORT:
+			#if MAC_ECHO
 			NRF_LOG_INFO("peer_addr.addr:%02X %02X %02X %02X %02X %02X", 
 										p_adv_report->peer_addr.addr[0],
 										p_adv_report->peer_addr.addr[1],
@@ -417,8 +423,8 @@ static void ble_evt_handler(ble_evt_t const * p_ble_evt, void * p_context)
 										p_adv_report->peer_addr.addr[3],
 										p_adv_report->peer_addr.addr[4],
 										p_adv_report->peer_addr.addr[5]);
-			
-			
+			#endif
+		
 			break;
         case BLE_GAP_EVT_CONNECTED:
             err_code = ble_nus_c_handles_assign(&m_ble_nus_c, p_ble_evt->evt.gap_evt.conn_handle, NULL);
@@ -686,6 +692,11 @@ static void idle_state_handle(void)
 
 int main(void)
 {
+	// Que initial.
+	int result;
+	Qque queue;
+	memset(&queue, 0, sizeof(queue));
+	
     // Initialize.
     log_init();
     timer_init();
@@ -701,6 +712,13 @@ int main(void)
     // Start execution.
     printf("BLE UART central example started.\r\n");
     NRF_LOG_INFO("BLE UART central example started.");
+	
+	result = que_init(&queue);
+	NRF_LOG_INFO("1:%d  %d\n", queue.front, queue.rear);
+	for(uint8_t i = 0; i < 12; i++){
+		result = que_func(que_ent, &queue, (uint8_t *)"a");
+	}
+	que_print(&queue);
     scan_start();
 
     // Enter main loop.

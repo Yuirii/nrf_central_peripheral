@@ -382,6 +382,11 @@
           <GroupName>Application</GroupName>
           <Files>
             <File>
+              <FileName>app_que.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\app_que.c</FilePath>
+            </File>
+            <File>
               <FileName>main.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\main.c</FilePath>
@@ -390,11 +395,6 @@
               <FileName>sdk_config.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\config\sdk_config.h</FilePath>
-            </File>
-            <File>
-              <FileName>app_que.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\app_que.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -3980,6 +3980,11 @@
           <GroupName>Application</GroupName>
           <Files>
             <File>
+              <FileName>app_que.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\app_que.c</FilePath>
+            </File>
+            <File>
               <FileName>main.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\main.c</FilePath>
@@ -3988,11 +3993,6 @@
               <FileName>sdk_config.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\config\sdk_config.h</FilePath>
-            </File>
-            <File>
-              <FileName>app_que.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\app_que.c</FilePath>
             </File>
           </Files>
         </Group>
